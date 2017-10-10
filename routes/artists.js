@@ -3,7 +3,7 @@ const router = express.Router();
 const knex = require('../knex')
 
 router.get('/', function(req, res, next) {
-  knex('album')
+  knex('artist')
     .select('*')
     .then((data) => {
       res.status(200)
@@ -15,7 +15,7 @@ router.get('/', function(req, res, next) {
 router.get('/:id', function(req, res, next) {
   const id = Number(req.params.id)
 
-  knex('album')
+  knex('artist')
     .where('id', id)
     .first()
     .then((data) => {
@@ -26,17 +26,16 @@ router.get('/:id', function(req, res, next) {
 })
 
 router.post('/', function(req, res, next) {
-  const { title, rating, artist_id } = req.body
+  const { name, city } = req.body
 
-  if(!title || !rating || !artist_id) {
+  if(!name || !city) {
     return res.sendStatus(400)
   }
 
-  knex('album')
+  knex('artist')
     .insert({
-      title: title,
-      rating: rating,
-      artist_id: artist_id
+      name: name,
+      city: city
     }, '*')
     .then((data) => {
       res.status(200)
@@ -47,27 +46,22 @@ router.post('/', function(req, res, next) {
 
 router.patch('/:id', function(req, res, next) {
   const id = Number(req.params.id)
-  const { title, rating, artist_id } = req.body
+  const { name, city } = req.body
 
   let responseObj = {}
 
-  if(title) {
-    responseObj.title = title
+  if(name) {
+    responseObj.name = name
   }
 
-  if(rating) {
-    responseObj.rating = rating
+  if(city) {
+    responseObj.city = city
   }
 
-  if(artist_id) {
-    responseObj.artist_id = artist_id
-  }
-
-  knex('album')
+  knex('artist')
   .update({
-    title: title,
-    rating: rating,
-    artist_id: artist_id
+    name: name,
+    city: city
   },'*')
   .where('id', id)
   .then((data) => {
@@ -80,7 +74,7 @@ router.patch('/:id', function(req, res, next) {
 router.delete('/:id', function(req, res, next) {
   const id = Number(req.params.id)
 
-  knex('album')
+  knex('artist')
   .delete()
   .where('id', id)
   .then(() => {
